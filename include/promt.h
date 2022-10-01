@@ -10,6 +10,6 @@
 
 char *shell_make_promt();
 
-void remove_spaces(char *s);
+void shell_remove_spaces(char *s);
 
 #endif
