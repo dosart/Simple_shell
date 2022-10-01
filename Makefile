@@ -1,13 +1,20 @@
-CC := gcc
-CC_FLAGS := -I ./include -Werror -Wall -Wextra -Wpedantic -Wcast-align -Wcast-qual -Wconversion -Wenum-compare -Wfloat-equal -Wredundant-decls -Wsign-conversion
+CC:=gcc
+CC_FLAGS:=-I ./include -Werror -Wall -Wextra -Wpedantic -Wcast-align -Wcast-qual -Wconversion -Wenum-compare -Wfloat-equal -Wredundant-decls -Wsign-conversion
+SOURCES:=src/main.c src/shell.c src/wrappers.c src/promt.c
+OUTPUT_DIR:=./build
+EXECUTABLE:=shell
 
-OUTPUT_DIR = ./build
+all: $(SOURCES) $(EXECUTABLE)
 
-all: shell
+$(EXECUTABLE):
+	$(CC) $(CC_FLAGS) $(SOURCES) -o $(OUTPUT_DIR)/$(EXECUTABLE)
 
-shell: src/shell.c include/shell.h include/wrappers.h
-	$(CC) $(CC_FLAGS) src/main.c src/shell.c src/wrappers.c src/promt.c -o $(OUTPUT_DIR)/shell
+run: all
+	./$(OUTPUT_DIR)/$(EXECUTABLE)
+
+memcheck: all
+	valgrind --leak-check=yes ./$(OUTPUT_DIR)/$(EXECUTABLE)
 
 .PHONY: clean
-cleam:
+clean:
 	rm $(OUTPUT_DIR)/*
