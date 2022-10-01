@@ -5,8 +5,8 @@ OUTPUT_DIR = ./build
 
 all: shell
 
-shell: src/shell.c include/shell.h
-	$(CC) $(CC_FLAGS) src/main.c src/shell.c src/promt.c -o $(OUTPUT_DIR)/shell
+shell: src/shell.c include/shell.h include/wrappers.h
+	$(CC) $(CC_FLAGS) src/main.c src/shell.c src/wrappers.c src/promt.c -o $(OUTPUT_DIR)/shell
 
 .PHONY: clean
 cleam:

@@ -1,6 +1,8 @@
 #ifndef PROMT_H
 #define PROMT_H
 
+#include "wrappers.h"
+
 #include <stdio.h>
 #include <unistd.h>
 
