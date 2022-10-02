@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define MAX_PATH 1024
+#define SHELL_MAX_PATH 1024
 
 char *shell_make_promt();
 

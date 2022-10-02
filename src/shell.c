@@ -3,7 +3,7 @@
 void shell_loop(char *promt)
 {
     char *line;
-    char *argv[SHELL_ARGV_SIZE] = {""};
+    char *argv[SHELL_ARGV_SIZE];
 
     printf(SHELL_ANSI_COLOR_GREEN "%s", promt);
 
@@ -81,6 +81,10 @@ int shell_split_line(char *line, const char *tocken_delimeters, char **argv, siz
         token = strtok(NULL, tocken_delimeters);
     }
 
+    if (position >= argc)
+    {
+        return -1;
+    }
     // Place NULL to the end of tokens array
     argv[position] = NULL;
     return 0;
