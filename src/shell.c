@@ -3,14 +3,29 @@
 void shell_loop(char *promt)
 {
     char *line;
+    char *argv[SHELL_ARGV_SIZE] = {""};
 
-    printf(ANSI_COLOR_GREEN "%s", promt);
+    printf(SHELL_ANSI_COLOR_GREEN "%s", promt);
 
-    line = shell_read_line();
-    if (line != NULL)
-        printf("%s\n", line);
+    line = Shell_read_line();
+
+    // Split line to tokens. Write tokens to argv.
+    Shell_split_line(line, SHELL_TOKENS_DELIMITERS, argv, SHELL_ARGV_SIZE);
 
     free(line);
+    shell_init_default_value(argv, SHELL_ARGV_SIZE);
+}
+
+char *Shell_read_line()
+{
+    char *line = shell_read_line();
+    if (line == NULL)
+    {
+        // Logging all errors except Ctrl-D - terminal shutdown
+        fprintf(stderr, "[ERROR] Couldn't read from stdin\n");
+        exit(EXIT_FAILURE);
+    }
+    return line;
 }
 
 char *shell_read_line()
@@ -22,14 +37,7 @@ char *shell_read_line()
     // Reading line from stdin
     if ((str_len = getline(&line, &size, stdin)) == -1)
     {
-        // Logging all errors except Ctrl-D - terminal shutdown
-        if (errno != 0)
-        {
-            perror("shell_read_line");
-            exit(EXIT_FAILURE);
-        }
         free(line);
-        printf("\n");
         return NULL;
     }
 
@@ -40,4 +48,46 @@ char *shell_read_line()
     }
 
     return line;
+}
+
+void Shell_split_line(char *line, const char *tocken_delimeters, char **argv, size_t argc)
+{
+    int status = shell_split_line(line, tocken_delimeters, argv, argc);
+    if (status == -1)
+    {
+
+        fprintf(stderr, "[ERROR] Too long string. Count of argument must be <= %li\n", argc);
+        free(line);
+        exit(EXIT_FAILURE);
+    }
+}
+
+int shell_split_line(char *line, const char *tocken_delimeters, char **argv, size_t argc)
+{
+    size_t position = 0;
+    char *token;
+    // Tokenize process
+    token = strtok(line, tocken_delimeters);
+    while (token != NULL)
+    {
+        // Emplace token to array
+        argv[position++] = token;
+        // If array free space ended
+        if (position >= argc)
+        {
+            return -1;
+        }
+        // Getting next token
+        token = strtok(NULL, tocken_delimeters);
+    }
+
+    // Place NULL to the end of tokens array
+    argv[position] = NULL;
+    return 0;
+}
+
+void shell_init_default_value(char **argv, size_t size)
+{
+    for (size_t i = 0; i < size; ++i)
+        argv[i] = "";
 }
