@@ -95,13 +95,12 @@ int shell_split_line(char *line, const char *tocken_delimeters, char **argv, siz
 int shell_launch(char **args)
 {
     pid_t pid;
-    int status;
 
     pid = fork();
     // Error forking
     if (pid < 0)
     {
-        perror("shell_launch");
+        perror("[ERROR] shell_launch");
     }
     // Child process
     else if (pid == 0)
@@ -109,19 +108,18 @@ int shell_launch(char **args)
 
         if (execvp(args[0], args) == -1)
         {
-            perror("shell_launch");
+            perror("[ERROR] shell_launch");
         }
         exit(EXIT_FAILURE);
     }
     else
     {
         // Parent process
-        do
+        if (waitpid(pid, NULL, 0) != pid)
         {
-            waitpid(pid, &status, WUNTRACED);
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+            perror("[ERROR] shell_launch");
+        }
     }
-
     return 1;
 }
 
