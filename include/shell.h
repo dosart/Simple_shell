@@ -5,6 +5,8 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 /*
 Use these colors to print colored text on the console
@@ -23,5 +25,7 @@ void Shell_split_line(char *line, const char *tocken_delimeters, char **argv, si
 int shell_split_line(char *line, const char *tocken_delimeters, char **argv, size_t argc);
 
 void shell_init_default_value(char **argv, size_t size);
+
+int shell_launch(char **args);
 
 #endif

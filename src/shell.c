@@ -12,6 +12,8 @@ void shell_loop(char *promt)
     // Split line to tokens. Write tokens to argv.
     Shell_split_line(line, SHELL_TOKENS_DELIMITERS, argv, SHELL_ARGV_SIZE);
 
+    shell_launch(argv);
+
     free(line);
     shell_init_default_value(argv, SHELL_ARGV_SIZE);
 }
@@ -90,8 +92,41 @@ int shell_split_line(char *line, const char *tocken_delimeters, char **argv, siz
     return 0;
 }
 
+int shell_launch(char **args)
+{
+    pid_t pid;
+    int status;
+
+    pid = fork();
+    // Error forking
+    if (pid < 0)
+    {
+        perror("shell_launch");
+    }
+    // Child process
+    else if (pid == 0)
+    {
+
+        if (execvp(args[0], args) == -1)
+        {
+            perror("shell_launch");
+        }
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        // Parent process
+        do
+        {
+            waitpid(pid, &status, WUNTRACED);
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+    }
+
+    return 1;
+}
+
 void shell_init_default_value(char **argv, size_t size)
 {
     for (size_t i = 0; i < size; ++i)
-        argv[i] = "";
+        argv[i] = NULL;
 }
