@@ -105,11 +105,9 @@ int shell_launch(char **args)
     // Child process
     else if (pid == 0)
     {
-
-        if (execvp(args[0], args) == -1)
-        {
-            perror("[ERROR] shell_launch");
-        }
+        //This function must not return control. If returned control, it's an error
+        execvp(args[0], args);
+        perror("[ERROR] shell_launch");
         exit(EXIT_FAILURE);
     }
     else
