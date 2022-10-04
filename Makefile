@@ -5,15 +5,15 @@ OUTPUT_DIR:=./build
 EXECUTABLE:=shell
 EXECUTABLE_TEST:=shell_test
 
-.PHONY: all run creater_output_dir clean memcheck test
+.PHONY: all run create_output_dir clean memcheck test
 
-all: creater_output_dir $(SOURCES) $(EXECUTABLE)
+all: create_output_dir $(SOURCES) $(EXECUTABLE)
 
 run: all
 	./$(OUTPUT_DIR)/$(EXECUTABLE)
 
-creater_output_dir:
-	[ -d $(OUTPUT_DIR) ] && mkdir $(OUTPUT_DIR)
+create_output_dir:
+	mkdir -p $(OUTPUT_DIR)
 
 clean:
 	rm $(OUTPUT_DIR)/*
@@ -21,7 +21,7 @@ clean:
 memcheck: test
 	valgrind --leak-check=yes --track-origins=yes ./$(OUTPUT_DIR)/$(EXECUTABLE_TEST)
 
-test: creater_output_dir
+test: create_output_dir
 	$(CC) $(CC_FLAGS) src/tests.c $(SOURCES) -o $(OUTPUT_DIR)/$(EXECUTABLE_TEST)
 	./$(OUTPUT_DIR)/$(EXECUTABLE_TEST)
 

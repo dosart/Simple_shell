@@ -5,20 +5,19 @@ void shell_loop(char *promt)
     char *line;
     char *argv[SHELL_ARGV_SIZE];
     int status;
-    
-    printf(SHELL_ANSI_COLOR_GREEN "%s", promt);
     do
     {
-         line = Shell_read_line();
+        printf(SHELL_ANSI_COLOR_GREEN "%s", promt);
+        line = Shell_read_line();
 
-         // Split line to tokens. Write tokens to argv.
-         Shell_split_line(line, SHELL_TOKENS_DELIMITERS, argv, SHELL_ARGV_SIZE);
+        // Split line to tokens. Write tokens to argv.
+        Shell_split_line(line, SHELL_TOKENS_DELIMITERS, argv, SHELL_ARGV_SIZE);
 
-         status = shell_launch(argv);
-        
-         free(line);
-         shell_init_default_value(argv, SHELL_ARGV_SIZE);
-    }while (status);
+        status = shell_launch(argv);
+
+        free(line);
+        shell_init_default_value(argv, SHELL_ARGV_SIZE);
+    } while (status);
 }
 
 char *Shell_read_line()
@@ -100,29 +99,29 @@ int shell_launch(char **args)
     pid_t child_pid;
     switch (child_pid = fork())
     {
-        // Error forking    
-        case –1:
-            {
-                perror("[ERROR] shell_launch");
-                exit(EXIT_FAILURE);
-            }
-        // Child process
-        case 0:
-            {
-                 //This function must not return control. If returned control, it's an error
-                 execvp(args[0], args);
-                 perror("[ERROR] shell_launch");
-                 exit(EXIT_FAILURE);
-            }
-        // Parent process
-        default:
-            {
-                if (waitpid(child_pid, NULL, 0) != child_pid)
-                {
-                    perror("[ERROR] shell_launch");
-                    exit(EXIT_FAILURE);
-                }
-            }
+    // Error forking
+    case -1:
+    {
+        perror("[ERROR] shell_launch");
+        exit(EXIT_FAILURE);
+    }
+    // Child process
+    case 0:
+    {
+        // This function must not return control. If returned control, it's an error
+        execvp(args[0], args);
+        perror("[ERROR] shell_launch");
+        exit(EXIT_FAILURE);
+    }
+    // Parent process
+    default:
+    {
+        if (waitpid(child_pid, NULL, 0) != child_pid)
+        {
+            perror("[ERROR] shell_launch");
+            exit(EXIT_FAILURE);
+        }
+    }
     }
     return 1;
 }
