@@ -97,29 +97,32 @@ int shell_split_line(char *line, const char *tocken_delimeters, char **argv, siz
 
 int shell_launch(char **args)
 {
-    pid_t pid;
-
-    pid = fork();
-    // Error forking
-    if (pid < 0)
+    pid_t child_pid;
+    switch (child_pid = fork())
     {
-        perror("[ERROR] shell_launch");
-    }
-    // Child process
-    else if (pid == 0)
-    {
-        //This function must not return control. If returned control, it's an error
-        execvp(args[0], args);
-        perror("[ERROR] shell_launch");
-        exit(EXIT_FAILURE);
-    }
-    else
-    {
+        // Error forking    
+        case –1:
+            {
+                perror("[ERROR] shell_launch");
+                exit(EXIT_FAILURE);
+            }
+        // Child process
+        case 0:
+            {
+                 //This function must not return control. If returned control, it's an error
+                 execvp(args[0], args);
+                 perror("[ERROR] shell_launch");
+                 exit(EXIT_FAILURE);
+            }
         // Parent process
-        if (waitpid(pid, NULL, 0) != pid)
-        {
-            perror("[ERROR] shell_launch");
-        }
+        default:
+            {
+                if (waitpid(child_pid, NULL, 0) != child_pid)
+                {
+                    perror("[ERROR] shell_launch");
+                    exit(EXIT_FAILURE);
+                }
+            }
     }
     return 1;
 }
