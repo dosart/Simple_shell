@@ -4,18 +4,21 @@ void shell_loop(char *promt)
 {
     char *line;
     char *argv[SHELL_ARGV_SIZE];
-
+    int status;
+    
     printf(SHELL_ANSI_COLOR_GREEN "%s", promt);
+    do
+    {
+         line = Shell_read_line();
 
-    line = Shell_read_line();
+         // Split line to tokens. Write tokens to argv.
+         Shell_split_line(line, SHELL_TOKENS_DELIMITERS, argv, SHELL_ARGV_SIZE);
 
-    // Split line to tokens. Write tokens to argv.
-    Shell_split_line(line, SHELL_TOKENS_DELIMITERS, argv, SHELL_ARGV_SIZE);
-
-    shell_launch(argv);
-
-    free(line);
-    shell_init_default_value(argv, SHELL_ARGV_SIZE);
+         status = shell_launch(argv);
+        
+         free(line);
+         shell_init_default_value(argv, SHELL_ARGV_SIZE);
+    }while (status);
 }
 
 char *Shell_read_line()
