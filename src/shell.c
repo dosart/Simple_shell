@@ -3,17 +3,17 @@
 void shell_loop(char *promt)
 {
     char *line;
-    char *argv[SHELL_ARGV_SIZE];
     int status;
+    char *argv[SHELL_ARGV_SIZE];
     do
     {
-        printf(SHELL_ANSI_COLOR_GREEN "%s", promt);
+        printf(SHELL_COLOR_GREEN "%s" SHELL_COLOR_RESET, promt);
         line = Shell_read_line();
 
         // Split line to tokens. Write tokens to argv.
         Shell_split_line(line, SHELL_TOKENS_DELIMITERS, argv, SHELL_ARGV_SIZE);
 
-        status = shell_launch(argv);
+        status = shell_execute(argv);
 
         free(line);
         shell_init_default_value(argv, SHELL_ARGV_SIZE);
@@ -92,6 +92,28 @@ int shell_split_line(char *line, const char *tocken_delimeters, char **argv, siz
     // Place NULL to the end of tokens array
     argv[position] = NULL;
     return 0;
+}
+
+extern char *builtin_name[];
+extern int (*builtin_func[])(char **);
+
+int shell_execute(char **args)
+{
+    if (args[0] == NULL)
+    {
+        // If empty command return
+        return 1;
+    }
+
+    for (size_t i = 0; i < shell_num_builtins(); i++)
+    {
+        if (strcmp(args[0], builtin_name[i]) == 0)
+        {
+            return (*builtin_func[i])(args);
+        }
+    }
+
+    return shell_launch(args);
 }
 
 int shell_launch(char **args)
