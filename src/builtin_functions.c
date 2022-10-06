@@ -5,14 +5,16 @@ char *builtin_name[] = {
     "help",
     "exit",
     "clear",
-    "pwd"};
+    "pwd",
+    "history"};
 
 int (*builtin_func[])(char **) = {
     &shell_cd,
     &shell_help,
     &shell_exit,
     &shell_clear,
-    &shell_pwd};
+    &shell_pwd,
+    &shell_history};
 
 size_t shell_num_builtins()
 {
@@ -86,5 +88,14 @@ int shell_pwd(char **args)
     shell_remove_spaces(current_dir);
 
     printf("%s\n", current_dir);
+    return 1;
+}
+
+extern history_t history;
+
+int shell_history(char **args)
+{
+    (void)args;
+    shell_print_history(&history);
     return 1;
 }

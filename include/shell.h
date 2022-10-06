@@ -3,6 +3,7 @@
 
 #include "global_const.h"
 #include "builtin_functions.h"
+#include "history.h"
 
 #include <stdio.h>
 #include <errno.h>

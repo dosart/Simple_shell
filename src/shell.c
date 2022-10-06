@@ -1,23 +1,30 @@
 #include "shell.h"
 
+history_t history;
+
 void shell_loop(char *promt)
 {
     char *line;
     int status;
     char *argv[SHELL_ARGV_SIZE];
+
+    shell_init_history(&history, MAX_HISTORY);
     do
     {
         printf(SHELL_COLOR_GREEN "%s" SHELL_COLOR_RESET, promt);
+
         line = Shell_read_line();
+        Shell_add_history(&history, line);
 
         // Split line to tokens. Write tokens to argv.
         Shell_split_line(line, SHELL_TOKENS_DELIMITERS, argv, SHELL_ARGV_SIZE);
 
         status = shell_execute(argv);
 
-        free(line);
         shell_init_default_value(argv, SHELL_ARGV_SIZE);
     } while (status);
+
+    shell_free_history(&history);
 }
 
 char *Shell_read_line()
@@ -50,7 +57,6 @@ char *shell_read_line()
     {
         line[str_len - 1] = '\0';
     }
-
     return line;
 }
 

@@ -7,4 +7,6 @@
 #define SHELL_COLOR_BLUE "\x1b[34m"
 #define SHELL_COLOR_RESET "\x1b[0m"
 
+#define MAX_HISTORY 64
+
 #endif

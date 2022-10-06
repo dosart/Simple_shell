@@ -1,6 +1,6 @@
 CC:=gcc
 CC_FLAGS:=-I ./include -Werror -Wall -Wextra -Wpedantic -Wcast-align -Wcast-qual -Wconversion -Wenum-compare -Wfloat-equal -Wredundant-decls -Wsign-conversion
-SOURCES:=src/shell.c src/wrappers.c src/promt.c src/builtin_functions.c
+SOURCES:=src/builtin_functions.c src/shell.c src/wrappers.c src/promt.c src/history.c
 OUTPUT_DIR:=./build
 EXECUTABLE:=shell
 EXECUTABLE_TEST:=shell_test
