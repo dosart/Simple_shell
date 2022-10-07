@@ -23,15 +23,3 @@ char *shell_make_promt()
 
     return promt;
 }
-
-void shell_remove_spaces(char *s)
-{
-    char *d = s;
-    do
-    {
-        while (*d == ' ')
-        {
-            ++d;
-        }
-    } while ((*s++ = *d++));
-}
