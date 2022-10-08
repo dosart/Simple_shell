@@ -2,6 +2,8 @@
 
 void shell_remove_spaces(char *s)
 {
+    if (s == NULL)
+        return;
     char *d = s;
     do
     {

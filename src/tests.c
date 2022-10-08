@@ -32,6 +32,14 @@ void test_run_all()
     test_search_error1();
     test_search_error2();
     test_search_error3();
+
+    printf("%s\n", "=======================================");
+
+    test_remove_spaces1();
+    test_remove_spaces2();
+
+    test_remove_spaces_empty_str1();
+    test_remove_spaces_empty_str2();
 }
 
 void test_split_good_string1()
@@ -270,4 +278,46 @@ void test_search_error3()
     assert(shell_find_symbol(NULL, NULL) == -1);
 
     printf("Test %s is done\n", "test_search_error3");
+}
+
+void test_remove_spaces1()
+{
+    char str[] = "ls  -l     -a .   ";
+
+    shell_remove_spaces(str);
+
+    assert(strcmp(str, "ls-l-a.") == 0);
+
+    printf("Test %s is done\n", "test_remove_spaces1");
+}
+
+void test_remove_spaces2()
+{
+    char str[] = "     ls  -l     -a .   ";
+
+    shell_remove_spaces(str);
+
+    assert(strcmp(str, "ls-l-a.") == 0);
+
+    printf("Test_remove_spaces2\n");
+}
+
+void test_remove_spaces_empty_str1()
+{
+    char str[] = "";
+    shell_remove_spaces(str);
+
+    assert(strcmp(str, "") == 0);
+
+    printf("Test %s is done\n", "test_remove_spaces_empty_str1");
+}
+
+void test_remove_spaces_empty_str2()
+{
+    char *str = NULL;
+    shell_remove_spaces(str);
+
+    assert(str == NULL);
+
+    printf("Test %s is done\n", "Test_remove_spaces_empty_str2\n");
 }

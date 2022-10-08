@@ -33,4 +33,11 @@ void test_search_error1();
 void test_search_error2();
 void test_search_error3();
 
+// =============================================
+void test_remove_spaces1();
+void test_remove_spaces2();
+
+void test_remove_spaces_empty_str1();
+void test_remove_spaces_empty_str2();
+
 #endif
