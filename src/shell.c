@@ -100,12 +100,12 @@ int shell_split_line(char *line, const char *tocken_delimeters, char **argv, siz
     return 0;
 }
 
-extern char *builtin_name[];
-extern int (*builtin_func[])(char **);
+extern char *global_builtin_name[];
+extern int (*global_builtin_func[])(char **);
 
-int shell_execute(char **args)
+int shell_execute(char **argv)
 {
-    if (args[0] == NULL)
+    if (argv[0] == NULL)
     {
         // If empty command return
         return 1;
@@ -113,16 +113,173 @@ int shell_execute(char **args)
 
     for (size_t i = 0; i < shell_num_builtins(); i++)
     {
-        if (strcmp(args[0], builtin_name[i]) == 0)
+        if (strcmp(argv[0], global_builtin_name[i]) == 0)
         {
-            return (*builtin_func[i])(args);
+            return shell_run_builtin_function(argv, i);
         }
     }
 
-    return shell_launch(args);
+    return shell_launch(argv);
 }
 
-int shell_launch(char **args)
+int shell_run_builtin_function(char **argv, size_t i)
+{
+    // If redirect exists, do it
+    redirecting_t r = shell_redirect(argv);
+    if (!shell_is_redirect(&r))
+    {
+        return (*global_builtin_func[i])(argv);
+    }
+    else
+    {
+        int command_status = (*global_builtin_func[i])(argv);
+        int redirect_status = shell_set_default_stream(&r);
+        if (command_status == -1 || redirect_status == -1)
+            return -1;
+        return 1;
+    }
+}
+
+int shell_is_redirect(redirecting_t *r)
+{
+    if (r == NULL)
+        return 0;
+
+    if (r->saved_fd == -1 || r->stream_fd == -1)
+    {
+        return 0;
+    }
+    return 1;
+}
+
+redirecting_t shell_redirect(char **argv)
+{
+    redirecting_t result = {.saved_fd = -1, .stream_fd = -1};
+    int symbol_index;
+
+    if ((symbol_index = shell_find_symbol(argv, ">")) != -1)
+    {
+        // Next token should be file name
+        return shell_run_redirect(argv[symbol_index + 1], SHELL_OUTPUT, SHELL_DEFAULT_MODE);
+    }
+
+    if ((symbol_index = shell_find_symbol(argv, "<")) != -1)
+    {
+        return shell_run_redirect(argv[symbol_index + 1], SHELL_INPUT, SHELL_DEFAULT_MODE);
+    }
+
+    if ((symbol_index = shell_find_symbol(argv, ">>")) != -1)
+    {
+        return shell_run_redirect(argv[symbol_index + 1], SHELL_OUTPUT, SHELL_APPEND_MODE);
+    }
+
+    if ((symbol_index = shell_find_symbol(argv, "2>")) != -1)
+    {
+        return shell_run_redirect(argv[symbol_index + 1], SHELL_ERROR, SHELL_DEFAULT_MODE);
+    }
+    return result;
+}
+
+redirecting_t shell_run_redirect(char *file_name, int stream_fd, int mode)
+{
+    redirecting_t result;
+    if (file_name == NULL)
+    {
+        result.saved_fd = -1;
+        result.stream_fd = -1;
+    }
+    else
+    {
+        result.saved_fd = shell_do_redirect(file_name, stream_fd, mode);
+        result.stream_fd = stream_fd;
+    }
+    return result;
+}
+
+int shell_do_redirect(char *file_name, int stream_fd, int mode)
+{
+    int saved_fd = dup(stream_fd);
+    int fd = open(file_name, shell_get_flag_by_stream(stream_fd, mode), 0666);
+    if (fd == -1)
+    {
+        fprintf(stderr, "[ERROR] Count open file");
+        return -1;
+    }
+    dup2(fd, stream_fd);
+    close(fd);
+
+    return saved_fd;
+}
+
+int shell_get_flag_by_stream(int stream, int mode)
+{
+    switch (stream)
+    {
+    case SHELL_INPUT:
+        return O_RDONLY;
+
+    case SHELL_ERROR:
+        if (mode == SHELL_DEFAULT_MODE)
+        {
+            return (O_CREAT | O_WRONLY | O_TRUNC);
+        }
+        else
+        {
+            return (O_CREAT | O_WRONLY | O_TRUNC);
+        }
+
+    case SHELL_OUTPUT:
+        if (mode == SHELL_DEFAULT_MODE)
+        {
+            return (O_CREAT | O_WRONLY | O_TRUNC);
+        }
+        else
+        {
+            return (O_WRONLY | O_APPEND);
+        }
+    default:
+        return 1;
+    }
+}
+
+int shell_set_default_stream(redirecting_t *r)
+{
+    if (r == NULL)
+        return -1;
+
+    FILE *stream;
+    stream = shell_get_stream_by(r->stream_fd);
+    if (stream == NULL)
+    {
+        fprintf(stderr, "[ERROR] Coudn't write to %i stream", r->stream_fd);
+        return -1;
+    }
+    fflush(stream);
+
+    dup2(r->saved_fd, r->stream_fd);
+    close(r->saved_fd);
+
+    return 1;
+}
+
+FILE *shell_get_stream_by(int stream_fd)
+{
+    switch (stream_fd)
+    {
+    case SHELL_INPUT:
+        return stdin;
+    case SHELL_OUTPUT:
+        return stdout;
+    case SHELL_ERROR:
+        return stderr;
+    case SHELL_APPEND:
+        return stdout;
+    default:
+        return NULL;
+    }
+}
+
+int shell_launch(char **argv)
 {
     pid_t child_pid;
     switch (child_pid = fork())
@@ -137,7 +294,7 @@ int shell_launch(char **args)
     case 0:
     {
         // This function must not return control. If returned control, it's an error
-        execvp(args[0], args);
+        execvp(argv[0], argv);
         perror("[ERROR] shell_launch");
         exit(EXIT_FAILURE);
     }

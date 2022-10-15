@@ -1,6 +1,6 @@
 #include "builtin_functions.h"
 
-char *builtin_name[] = {
+char *global_builtin_name[] = {
     "cd",
     "help",
     "exit",
@@ -8,7 +8,7 @@ char *builtin_name[] = {
     "pwd",
     "history"};
 
-int (*builtin_func[])(char **) = {
+int (*global_builtin_func[])(char **) = {
     &shell_cd,
     &shell_help,
     &shell_exit,
@@ -18,7 +18,7 @@ int (*builtin_func[])(char **) = {
 
 size_t shell_num_builtins()
 {
-    return sizeof(builtin_name) / sizeof(char *);
+    return sizeof(global_builtin_name) / sizeof(char *);
 }
 
 int shell_cd(char **args)
