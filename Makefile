@@ -19,7 +19,7 @@ clean:
 	rm $(OUTPUT_DIR)/*
 
 memcheck: test
-	valgrind --leak-check=yes --track-origins=yes ./$(OUTPUT_DIR)/$(EXECUTABLE_TEST)
+	valgrind --leak-check=yes --track-origins=yes -s ./$(OUTPUT_DIR)/$(EXECUTABLE_TEST)
 
 test: create_output_dir
 	$(CC) $(CC_FLAGS) src/tests.c $(SOURCES) -o $(OUTPUT_DIR)/$(EXECUTABLE_TEST)

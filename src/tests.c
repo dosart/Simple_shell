@@ -146,7 +146,7 @@ void test_split_string_with_other_symbols3()
 void test_split_empty_string1()
 {
     char line[] = "";
-    char *argv[4];
+    char *argv[4] = {NULL};
     shell_split_line(line, SHELL_TOKENS_DELIMITERS, argv, 4);
 
     assert(argv[0] == NULL);
@@ -160,7 +160,7 @@ void test_split_empty_string1()
 void test_split_empty_string2()
 {
     char line[] = "    ";
-    char *argv[4];
+    char *argv[4] = {NULL};
     shell_split_line(line, SHELL_TOKENS_DELIMITERS, argv, 4);
 
     assert(argv[0] == NULL);

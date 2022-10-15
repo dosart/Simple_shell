@@ -177,6 +177,11 @@ redirecting_t shell_redirect(char **argv)
     {
         return shell_run_redirect(argv[symbol_index + 1], SHELL_ERROR, SHELL_DEFAULT_MODE);
     }
+
+    if ((symbol_index = shell_find_symbol(argv, "2>>")) != -1)
+    {
+        return shell_run_redirect(argv[symbol_index + 1], SHELL_ERROR, SHELL_APPEND_MODE);
+    }
     return result;
 }
 
@@ -293,6 +298,9 @@ int shell_launch(char **argv)
     // Child process
     case 0:
     {
+        // If redirect exists, do it
+        shell_redirect(argv);
+
         // This function must not return control. If returned control, it's an error
         execvp(argv[0], argv);
         perror("[ERROR] shell_launch");
