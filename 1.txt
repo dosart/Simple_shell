@@ -1,0 +1,28 @@
+total 48
+drwxrwxr-x 8 dosart3 dosart3 4096 окт 15 18:44 .
+drwxrwxr-x 7 dosart3 dosart3 4096 окт 13 18:24 ..
+-rw-rw-r-- 1 dosart3 dosart3    0 окт 15 18:45 1.txt
+drwxrwxr-x 2 dosart3 dosart3 4096 окт 15 18:44 build
+drwxrwxr-x 8 dosart3 dosart3 4096 окт 15 18:35 .git
+-rw-rw-r-- 1 dosart3 dosart3  447 окт  2 19:55 .gitignore
+drwxrwxr-x 2 dosart3 dosart3 4096 окт  7 20:58 include
+-rw-rw-r-- 1 dosart3 dosart3 1072 сен 30 21:11 LICENSE
+-rw-rw-r-- 1 dosart3 dosart3  877 окт 15 18:24 Makefile
+-rw-rw-r-- 1 dosart3 dosart3   14 сен 30 21:11 README.md
+drwxrwxr-x 2 dosart3 dosart3 4096 окт  7 20:58 src
+drwxrwxr-x 2 dosart3 dosart3 4096 окт  6 19:21 test
+drwxrwxr-x 2 dosart3 dosart3 4096 окт  2 19:12 .vscode
+total 52
+drwxrwxr-x 8 dosart3 dosart3 4096 окт 15 18:44 .
+drwxrwxr-x 7 dosart3 dosart3 4096 окт 13 18:24 ..
+-rw-rw-r-- 1 dosart3 dosart3  744 окт 15 18:45 1.txt
+drwxrwxr-x 2 dosart3 dosart3 4096 окт 15 18:44 build
+drwxrwxr-x 8 dosart3 dosart3 4096 окт 15 18:35 .git
+-rw-rw-r-- 1 dosart3 dosart3  447 окт  2 19:55 .gitignore
+drwxrwxr-x 2 dosart3 dosart3 4096 окт  7 20:58 include
+-rw-rw-r-- 1 dosart3 dosart3 1072 сен 30 21:11 LICENSE
+-rw-rw-r-- 1 dosart3 dosart3  877 окт 15 18:24 Makefile
+-rw-rw-r-- 1 dosart3 dosart3   14 сен 30 21:11 README.md
+drwxrwxr-x 2 dosart3 dosart3 4096 окт  7 20:58 src
+drwxrwxr-x 2 dosart3 dosart3 4096 окт  6 19:21 test
+drwxrwxr-x 2 dosart3 dosart3 4096 окт  2 19:12 .vscode

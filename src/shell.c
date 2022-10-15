@@ -159,27 +159,33 @@ redirecting_t shell_redirect(char **argv)
 
     if ((symbol_index = shell_find_symbol(argv, ">")) != -1)
     {
+        // If function not builtin the format must be without file. For example {"ls", "ls" "-la" ".", NULL}
+        argv[symbol_index] = NULL;
         // Next token should be file name
         return shell_run_redirect(argv[symbol_index + 1], SHELL_OUTPUT, SHELL_DEFAULT_MODE);
     }
 
     if ((symbol_index = shell_find_symbol(argv, "<")) != -1)
     {
+        argv[symbol_index] = NULL;
         return shell_run_redirect(argv[symbol_index + 1], SHELL_INPUT, SHELL_DEFAULT_MODE);
     }
 
     if ((symbol_index = shell_find_symbol(argv, ">>")) != -1)
     {
+        argv[symbol_index] = NULL;
         return shell_run_redirect(argv[symbol_index + 1], SHELL_OUTPUT, SHELL_APPEND_MODE);
     }
 
     if ((symbol_index = shell_find_symbol(argv, "2>")) != -1)
     {
+        argv[symbol_index] = NULL;
         return shell_run_redirect(argv[symbol_index + 1], SHELL_ERROR, SHELL_DEFAULT_MODE);
     }
 
     if ((symbol_index = shell_find_symbol(argv, "2>>")) != -1)
     {
+        argv[symbol_index] = NULL;
         return shell_run_redirect(argv[symbol_index + 1], SHELL_ERROR, SHELL_APPEND_MODE);
     }
     return result;
@@ -230,7 +236,7 @@ int shell_get_flag_by_stream(int stream, int mode)
         }
         else
         {
-            return (O_CREAT | O_WRONLY | O_TRUNC);
+            return (O_WRONLY | O_APPEND);
         }
 
     case SHELL_OUTPUT:
