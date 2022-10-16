@@ -13,8 +13,6 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 
-#define min(a, b) (a < b) ? a : b;
-
 #define SHELL_ARGV_SIZE 64
 #define SHELL_TOKENS_DELIMITERS " \t\r\n\a"
 
@@ -33,6 +31,17 @@ typedef struct __redirecting_t
 
 } redirecting_t;
 
+typedef struct __pipe_t
+{
+    int to_close;
+    int to_redirect;
+    int stream_fd;
+} pipe_t;
+
+void shell_set_up_pipe(pipe_t *p);
+void shell_close_pipe(pipe_t *p);
+int shell_do_pipe(char **argv, int pipe_index);
+
 void shell_loop(char *promt);
 
 char *Shell_read_line();
@@ -44,7 +53,8 @@ int shell_split_line(char *line, const char *tocken_delimeters, char **argv, siz
 void shell_init_default_value(char **argv, size_t size);
 
 int shell_execute(char **args);
-int shell_launch(char **args);
+int shell_launch(char **argv);
+int shell_create_process(char **argv);
 
 int shell_run_builtin_function(char **argv, size_t i);
 int shell_is_redirect(redirecting_t *r);
@@ -56,7 +66,5 @@ FILE *shell_get_stream_by(int stream_fd);
 
 redirecting_t shell_redirect(char **argv);
 redirecting_t shell_run_redirect(char *file_name, int stream_fd, int mode);
-
-int change_if_append(int append);
 
 #endif

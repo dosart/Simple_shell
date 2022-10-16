@@ -124,7 +124,7 @@ int shell_execute(char **argv)
 
 int shell_run_builtin_function(char **argv, size_t i)
 {
-    // If redirect exists, do it
+    // If redirect exists, do it. Else return
     redirecting_t r = shell_redirect(argv);
     if (!shell_is_redirect(&r))
     {
@@ -159,7 +159,8 @@ redirecting_t shell_redirect(char **argv)
 
     if ((symbol_index = shell_find_symbol(argv, ">")) != -1)
     {
-        // If function not builtin the format must be without file. For example {"ls", "ls" "-la" ".", NULL}
+        // If function not builtin the format must be without file.
+        // For example {"ls", "ls" "-la" ".", NULL}. Remove symbols (>, >>, <, 2>, 2>>)
         argv[symbol_index] = NULL;
         // Next token should be file name
         return shell_run_redirect(argv[symbol_index + 1], SHELL_OUTPUT, SHELL_DEFAULT_MODE);
@@ -228,7 +229,6 @@ int shell_get_flag_by_stream(int stream, int mode)
     {
     case SHELL_INPUT:
         return O_RDONLY;
-
     case SHELL_ERROR:
         if (mode == SHELL_DEFAULT_MODE)
         {
@@ -238,7 +238,6 @@ int shell_get_flag_by_stream(int stream, int mode)
         {
             return (O_WRONLY | O_APPEND);
         }
-
     case SHELL_OUTPUT:
         if (mode == SHELL_DEFAULT_MODE)
         {
@@ -291,6 +290,64 @@ FILE *shell_get_stream_by(int stream_fd)
 }
 
 int shell_launch(char **argv)
+{
+    int pipe_index;
+    if ((pipe_index = shell_find_symbol(argv, "|")) == -1)
+    {
+        return shell_create_process(argv);
+    }
+    else
+    {
+        return shell_do_pipe(argv, pipe_index);
+    }
+}
+
+int shell_do_pipe(char **argv, int pipe_index)
+{
+    argv[pipe_index] = NULL;
+
+    int fds[2];
+    pipe(fds);
+
+    pipe_t first_children = {.to_close = fds[0], .to_redirect = fds[1], 1};
+    pipe_t second_children = {.to_close = fds[1], .to_redirect = fds[0], 0};
+
+    if (fork() == 0)
+    {
+
+        shell_set_up_pipe(&first_children);
+        execvp(argv[0], argv);
+    }
+
+    if (fork() == 0)
+    {
+        // If redirect exists, do it. Else return
+        shell_redirect(&argv[pipe_index + 1]);
+
+        shell_set_up_pipe(&second_children);
+        execvp(argv[pipe_index + 1], &argv[pipe_index + 1]);
+    }
+
+    close(fds[0]);
+    close(fds[1]);
+
+    wait(NULL);
+    wait(NULL);
+
+    return 1;
+}
+
+void shell_set_up_pipe(pipe_t *p)
+{
+    if (p == NULL)
+        return;
+
+    close(p->to_close);
+    dup2(p->to_redirect, p->stream_fd);
+    close(p->to_redirect);
+}
+
+int shell_create_process(char **argv)
 {
     pid_t child_pid;
     switch (child_pid = fork())
