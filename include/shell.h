@@ -5,6 +5,7 @@
 #include "builtin_functions.h"
 #include "history.h"
 #include "redirect.h"
+#include "pipe.h"
 
 #include <stdio.h>
 #include <errno.h>
@@ -13,17 +14,6 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <fcntl.h>
-
-typedef struct __pipe_t
-{
-    int to_close;
-    int to_redirect;
-    int stream_fd;
-} pipe_t;
-
-void shell_set_up_pipe(pipe_t *p);
-void shell_close_pipe(pipe_t *p);
-int shell_do_pipe(char **argv, int pipe_index);
 
 void shell_loop(char *promt);
 
