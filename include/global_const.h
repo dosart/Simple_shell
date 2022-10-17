@@ -9,4 +9,12 @@
 
 #define MAX_HISTORY 64
 
+#define SHELL_INPUT 0
+#define SHELL_OUTPUT 1
+#define SHELL_ERROR 2
+#define SHELL_APPEND 3
+
+#define SHELL_DEFAULT_MODE 0
+#define SHELL_APPEND_MODE 1
+
 #endif

@@ -4,6 +4,7 @@
 #include "global_const.h"
 #include "builtin_functions.h"
 #include "history.h"
+#include "redirect.h"
 
 #include <stdio.h>
 #include <errno.h>
@@ -15,21 +16,6 @@
 
 #define SHELL_ARGV_SIZE 64
 #define SHELL_TOKENS_DELIMITERS " \t\r\n\a"
-
-#define SHELL_INPUT 0
-#define SHELL_OUTPUT 1
-#define SHELL_ERROR 2
-#define SHELL_APPEND 3
-
-#define SHELL_DEFAULT_MODE 0
-#define SHELL_APPEND_MODE 1
-
-typedef struct __redirecting_t
-{
-    int saved_fd;
-    int stream_fd;
-
-} redirecting_t;
 
 typedef struct __pipe_t
 {
@@ -57,14 +43,5 @@ int shell_launch(char **argv);
 int shell_create_process(char **argv);
 
 int shell_run_builtin_function(char **argv, size_t i);
-int shell_is_redirect(redirecting_t *r);
-
-int shell_do_redirect(char *file_name, int stream_fd, int mode);
-int shell_set_default_stream(redirecting_t *r);
-int shell_get_flag_by_stream(int stream, int mode);
-FILE *shell_get_stream_by(int stream_fd);
-
-redirecting_t shell_redirect(char **argv);
-redirecting_t shell_run_redirect(char *file_name, int stream_fd, int mode);
 
 #endif
