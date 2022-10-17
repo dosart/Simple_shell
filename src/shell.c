@@ -140,18 +140,6 @@ int shell_run_builtin_function(char **argv, size_t i)
     }
 }
 
-int shell_is_redirect(redirecting_t *r)
-{
-    if (r == NULL)
-        return 0;
-
-    if (r->saved_fd == -1 || r->stream_fd == -1)
-    {
-        return 0;
-    }
-    return 1;
-}
-
 int shell_launch(char **argv)
 {
     int pipe_index;

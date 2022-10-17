@@ -1,5 +1,17 @@
 #include "redirect.h"
 
+int shell_is_redirect(redirecting_t *r)
+{
+    if (r == NULL)
+        return 0;
+
+    if (r->saved_fd == -1 || r->stream_fd == -1)
+    {
+        return 0;
+    }
+    return 1;
+}
+
 redirecting_t shell_redirect(char **argv)
 {
     redirecting_t result = {.saved_fd = -1, .stream_fd = -1};
