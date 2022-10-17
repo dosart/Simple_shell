@@ -17,4 +17,7 @@
 #define SHELL_DEFAULT_MODE 0
 #define SHELL_APPEND_MODE 1
 
+#define SHELL_ARGV_SIZE 64
+#define SHELL_TOKENS_DELIMITERS " \t\r\n\a"
+
 #endif

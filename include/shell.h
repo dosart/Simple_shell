@@ -14,9 +14,6 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 
-#define SHELL_ARGV_SIZE 64
-#define SHELL_TOKENS_DELIMITERS " \t\r\n\a"
-
 typedef struct __pipe_t
 {
     int to_close;
