@@ -91,11 +91,11 @@ int shell_pwd(char **args)
     return 1;
 }
 
-extern history_t history;
+extern history_t global_history;
 
 int shell_history(char **args)
 {
     (void)args;
-    shell_print_history(&history);
+    shell_print_history(&global_history);
     return 1;
 }
