@@ -2,11 +2,10 @@
 #define PIPE_H
 
 #include "redirect.h"
+#include "wrappers.h"
 
 #include <stdio.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <sys/wait.h>
 
 typedef struct __pipe_t
 {

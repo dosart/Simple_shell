@@ -5,7 +5,7 @@ int shell_do_pipe(char **argv, int pipe_index)
     argv[pipe_index] = NULL;
 
     int fds[2];
-    pipe(fds);
+    Pipe(fds);
 
     pipe_t first_children = {.to_close = fds[0], .to_redirect = fds[1], 1};
     pipe_t second_children = {.to_close = fds[1], .to_redirect = fds[0], 0};
@@ -26,11 +26,11 @@ int shell_do_pipe(char **argv, int pipe_index)
         execvp(argv[pipe_index + 1], &argv[pipe_index + 1]);
     }
 
-    close(fds[0]);
-    close(fds[1]);
+    Close(fds[0]);
+    Close(fds[1]);
 
-    wait(NULL);
-    wait(NULL);
+    Wait(NULL);
+    Wait(NULL);
 
     return 1;
 }
@@ -40,7 +40,7 @@ void shell_set_up_pipe(pipe_t *p)
     if (p == NULL)
         return;
 
-    close(p->to_close);
-    dup2(p->to_redirect, p->stream_fd);
-    close(p->to_redirect);
+    Close(p->to_close);
+    Dup2(p->to_redirect, p->stream_fd);
+    Close(p->to_redirect);
 }

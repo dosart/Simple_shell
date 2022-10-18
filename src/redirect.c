@@ -70,15 +70,15 @@ redirecting_t shell_run_redirect(char *file_name, int stream_fd, int mode)
 
 int shell_do_redirect(char *file_name, int stream_fd, int mode)
 {
-    int saved_fd = dup(stream_fd);
+    int saved_fd = Dup(stream_fd);
     int fd = open(file_name, shell_get_flag_by_stream(stream_fd, mode), 0666);
     if (fd == -1)
     {
         fprintf(stderr, "[ERROR] Count open file");
         return -1;
     }
-    dup2(fd, stream_fd);
-    close(fd);
+    Dup2(fd, stream_fd);
+    Close(fd);
 
     return saved_fd;
 }
@@ -126,8 +126,8 @@ int shell_set_default_stream(redirecting_t *r)
     }
     fflush(stream);
 
-    dup2(r->saved_fd, r->stream_fd);
-    close(r->saved_fd);
+    Dup2(r->saved_fd, r->stream_fd);
+    Close(r->saved_fd);
 
     return 1;
 }

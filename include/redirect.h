@@ -3,6 +3,7 @@
 
 #include "global_const.h"
 #include "utils.h"
+#include "wrappers.h"
 
 #include <stdio.h>
 #include <unistd.h>
