@@ -1,15 +1,11 @@
-#include <stdlib.h>
-
 #include "shell.h"
-#include "promt.h"
+
+#include <stdlib.h>
 
 int main()
 {
-    // Make promt for command line.
-    char *promt = shell_make_promt();
     // Run command loop.
-    shell_loop(promt);
-    free(promt);
+    shell_loop();
 
     return EXIT_SUCCESS;
 }

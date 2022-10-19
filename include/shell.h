@@ -6,6 +6,7 @@
 #include "history.h"
 #include "redirect.h"
 #include "pipe.h"
+#include "promt.h"
 
 #include <stdio.h>
 #include <errno.h>
@@ -15,7 +16,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 
-void shell_loop(char *promt);
+void shell_loop();
 
 char *Shell_read_line();
 char *shell_read_line();

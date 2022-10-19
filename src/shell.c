@@ -2,13 +2,17 @@
 
 history_t global_history;
 
-void shell_loop(char *promt)
+void shell_loop()
 {
     char *line;
+    char *promt;
     int status;
     char *argv[SHELL_ARGV_SIZE];
 
     shell_init_history(&global_history, MAX_HISTORY);
+
+    // Make promt for command line.
+    promt = shell_make_promt();
     do
     {
         printf(SHELL_COLOR_GREEN "%s" SHELL_COLOR_RESET, promt);
@@ -22,9 +26,13 @@ void shell_loop(char *promt)
         status = shell_execute(argv);
 
         shell_init_default_value(argv, SHELL_ARGV_SIZE);
+
+        // If prompt was changed(for example cd command), make new prompt
+        promt = shell_make_new_promt(promt);
     } while (status);
 
     shell_free_history(&global_history);
+    free(promt);
 }
 
 char *Shell_read_line()
