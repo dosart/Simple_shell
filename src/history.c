@@ -61,4 +61,5 @@ void shell_free_history(history_t *h)
     {
         free(h->history[i]);
     }
+    free(h->history);
 }
