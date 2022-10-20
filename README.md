@@ -6,17 +6,17 @@ Implemented functionalities are as under:
 
  - implement internal commands: cd, pwd, history, clear, help, exit;
 
- - redirection operators: STDIN, STDOUT, STDERR (>>,>,<<,<,2>)
+ - redirection operators: STDIN, STDOUT, STDERR (>>,>,<<,<,2>);
 
-- support for history command
+- support for history command;
 
-- pipes | (single) (Ex: ls | grep 'a')
+- pipes | (single) (Ex: ls | grep 'a');
 
 ## Technologies:
 
- - c - a programming language
+ - c - a programming language;
  - make - an automation tool;
- - valgrind - an instrumentation framework for building dynamic analysis tools
+ - valgrind - an instrumentation framework for building dynamic analysis tools;
 
  ## Install:
 
